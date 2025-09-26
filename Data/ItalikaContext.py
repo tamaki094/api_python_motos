@@ -1,15 +1,17 @@
 import pyodbc
+from Models.TBModelos import TBModelos
 from Models.Moto import Moto
 
 class ItalikaContext:
     conn_str :str
 
     def __init__(self):
-        self.conn_str : str = (
+        self.conn_str : str = (           
             "DRIVER={ODBC Driver 17 for SQL Server};"
-            "SERVER=localhost\\SQLEXPRESS;"
-            "DATABASE=ITALIKA;"
-            "Trusted_Connection=yes;"
+            "SERVER=10.81.87.137,1233;"
+            "DATABASE=BDItalika;"
+            "UID=ITKDentroDeElektra;"
+            "PWD=ITKDentroDeElektra11;"
         )
 
 
@@ -19,7 +21,7 @@ class ItalikaContext:
             print("Conexión exitosa a SQL Server.")
 
             cursor = conn.cursor()
-            cursor.execute("SELECT TOP 5 * FROM Motos")
+            cursor.execute("select * from dbo.TBMODELOS")
             for row in cursor.fetchall():
                 print(row)
 
@@ -131,6 +133,31 @@ class ItalikaContext:
         except Exception as e:
             print("Error al borrar moto:", e)
             return False
+        
+    def getModelos(self) -> list[TBModelos]: # type: ignore
+        try:
+            conn = pyodbc.connect(self.conn_str)
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM dbo.TBMODELOS")
+            resultados = []
+
+            for row in cursor.fetchall():
+                # Crear diccionario con los datos
+                modelo_data = {
+                    'FCMODELOID': row.FCMODELOID,
+                    'FCDESCRIPCION': row.FCDESCRIPCION,
+                    'FIESTATUS': row.FIESTATUS
+                }          
+                # Pasar el diccionario como parámetro 'data'
+                modelo = TBModelos(data=modelo_data)
+                resultados.append(modelo)
+
+            conn.close()
+            return resultados
+        except Exception as e:
+            print("Error al obtener modelos:", e)    
+            return []
+
 
 
 

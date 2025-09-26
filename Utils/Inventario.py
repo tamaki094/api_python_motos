@@ -1,5 +1,6 @@
 from Models.Moto import Moto
 from Data.ItalikaContext import ItalikaContext
+from Models.TBModelos import TBModelos
 
 class Inventario:
 
@@ -39,3 +40,13 @@ class Inventario:
         ctx : ItalikaContext = ItalikaContext()
         moto : Moto = ctx.insertMoto(moto)  
         return True
+    
+    @staticmethod
+    def probar_conexion() -> bool:
+        ctx: ItalikaContext = ItalikaContext()
+        return ctx.conectar()
+    
+    @staticmethod
+    def consultarModelos() -> list[TBModelos]:
+        ctx : ItalikaContext = ItalikaContext()
+        return ctx.getModelos()

@@ -11,11 +11,22 @@ from Models.Moto import Moto
 
 app = Flask(__name__)
 
-@app.route('/api/motos', methods=['GET'])
-def obtener_motos():
-    motos = Inventario.consultarMotos()
-    motos_dict = [moto.to_dict() for moto in motos]
-    return jsonify(motos_dict)
+
+@app.route('/api/conexion', methods=['GET'])
+def probar_conexion():
+    test = Inventario.probar_conexion()
+
+    if test:
+        return jsonify({"success": "ok"})
+    return jsonify({"error": "Connection failed"}), 500
+    # motos_dict = [moto.to_dict() for moto in motos]
+    # return jsonify(motos_dict)
+
+@app.route('/api/modelos', methods=['GET'])
+def obtener_modelos():
+    modelos = Inventario.consultarModelos()
+    return jsonify([modelo.to_dict() for modelo in modelos])
+
 
 @app.route('/api/motos', methods=['POST'])
 def guardar_motos():
