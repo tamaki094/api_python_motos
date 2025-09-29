@@ -1,4 +1,5 @@
 import pyodbc
+from Models.TBCILINDRAJES import TBCILINDRAJES
 from Models.TBModelos import TBModelos
 from Models.Moto import Moto
 
@@ -156,6 +157,30 @@ class ItalikaContext:
             return resultados
         except Exception as e:
             print("Error al obtener modelos:", e)    
+            return []
+        
+    def getCilindrajes(self) -> list[TBCILINDRAJES]: # type: ignore
+        try:
+            conn = pyodbc.connect(self.conn_str)
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM dbo.TBCILINDRAJES")
+            resultados = []
+
+            for row in cursor.fetchall():
+                # Crear diccionario con los datos
+                cilindraje_data = {
+                    'FICILINDRAJEID': row.FICILINDRAJEID,
+                    'FCDESCRIPCION': row.FCDESCRIPCION,
+                    'FIESTATUS': row.FIESTATUS
+                }          
+                # Pasar el diccionario como parámetro 'data'
+                cilindraje = TBCILINDRAJES(data=cilindraje_data)
+                resultados.append(cilindraje)
+
+            conn.close()
+            return resultados
+        except Exception as e:
+            print("Error al obtener cilindrajes:", e)    
             return []
 
 

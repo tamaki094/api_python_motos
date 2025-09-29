@@ -27,6 +27,11 @@ def obtener_modelos():
     modelos = Inventario.consultarModelos()
     return jsonify([modelo.to_dict() for modelo in modelos])
 
+@app.route('/api/cilindrajes', methods=['GET'])
+def obtener_cilindrajes():
+    cilindradas = Inventario.consultarCilindrajes()
+    return jsonify([cilindrada.to_dict() for cilindrada in cilindradas])
+
 
 @app.route('/api/motos', methods=['POST'])
 def guardar_motos():

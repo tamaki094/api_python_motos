@@ -1,5 +1,7 @@
-from Models.Moto import Moto
 from Data.ItalikaContext import ItalikaContext
+
+from Models.Moto import Moto
+from Models.TBCILINDRAJES import TBCILINDRAJES
 from Models.TBModelos import TBModelos
 
 class Inventario:
@@ -50,3 +52,8 @@ class Inventario:
     def consultarModelos() -> list[TBModelos]:
         ctx : ItalikaContext = ItalikaContext()
         return ctx.getModelos()
+    
+    @staticmethod
+    def consultarCilindrajes() -> list[TBCILINDRAJES]:
+        ctx : ItalikaContext = ItalikaContext()
+        return ctx.getCilindrajes()
