@@ -1,4 +1,5 @@
 import pyodbc
+from Models.TBUsuarios import TBUsuarios
 from Models.TBCILINDRAJES import TBCILINDRAJES
 from Models.TBModelos import TBModelos
 from Models.Moto import Moto
@@ -159,6 +160,25 @@ class ItalikaContext:
             print("Error al obtener modelos:", e)    
             return []
         
+    def getModeloById(self, modelo_id: str) -> TBModelos: # type: ignore
+        try:
+            conn = pyodbc.connect(self.conn_str)
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM dbo.TBMODELOS WHERE FCMODELOID = ?", modelo_id)
+            row = cursor.fetchone()
+            if row:
+                modelo_data = {
+                    'FCMODELOID': row.FCMODELOID,
+                    'FCDESCRIPCION': row.FCDESCRIPCION,
+                    'FIESTATUS': row.FIESTATUS
+                }
+                return TBModelos(data=modelo_data)
+            return TBModelos()
+        except Exception as e:
+            print("Error al obtener modelo por ID:", e)
+            return TBModelos()
+
+
     def getCilindrajes(self) -> list[TBCILINDRAJES]: # type: ignore
         try:
             conn = pyodbc.connect(self.conn_str)
@@ -182,7 +202,16 @@ class ItalikaContext:
         except Exception as e:
             print("Error al obtener cilindrajes:", e)    
             return []
-
-
-
-
+        
+    def getUserByUserName(self, username: str) -> TBUsuarios: # type: ignore
+        try:
+            conn = pyodbc.connect(self.conn_str)
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM dbo.TBUSUARIOS WHERE FCNOMUSUARIO = ?", username)
+            row = cursor.fetchone()
+            if row:
+                return TBUsuarios.from_db_row(row)
+            return TBUsuarios()
+        except Exception as e:
+            print("Error al obtener usuario por nombre:", e)
+            return TBUsuarios()

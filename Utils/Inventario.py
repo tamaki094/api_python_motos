@@ -57,3 +57,8 @@ class Inventario:
     def consultarCilindrajes() -> list[TBCILINDRAJES]:
         ctx : ItalikaContext = ItalikaContext()
         return ctx.getCilindrajes()
+    
+    @staticmethod
+    def consultarModeloPorID(modelo_id: str) -> TBModelos:
+        ctx : ItalikaContext = ItalikaContext()
+        return ctx.getModeloById(modelo_id)
